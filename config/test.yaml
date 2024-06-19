@@ -1,0 +1,23 @@
+app:
+  port: 4001
+
+db:
+  host: localhost
+  port: 5432
+  username: postgres
+  password: password
+  database: country-authority-test
+
+mwDB:
+  host: db.mock9.qa.direct.fxpro.local
+  port: 3306
+  username: direct_mock9_qa
+  password: vSE5PZb74Qw
+  database: direct_mock9_qa
+
+adminApiDB:
+  host: lim01-dev-sql02.fxpro.local
+  port: 1433
+  username: configuratortechuser
+  password: DFhsThsqGEDh84bsikgrfasWD098
+  database: Partners-Mock

@@ -1,0 +1,56 @@
+---
+# Product name
+product: tc
+
+# Kubernetes namespace
+namespace: "{{ .Values.product }}-{{ .Values.env }}-{{ .Values.plant }}"
+
+countryAuthorityEtl:
+  # Defines the docker image tag as stored in registry
+  image: "{{ .Values.product }}/{{ .Chart.Name }}"
+
+  # Defines the ingress host name
+  host: "{{ .Chart.Name }}.{{ .Values.env }}.{{ .Values.plant }}.{{ .Values.domain }}"
+
+  config:
+    app:
+      env: "{{ .Values.env }}"
+      plant: "{{ .Values.plant }}"
+      port: 3000
+      serviceName: "country-authority-etl"
+
+    # Settings for Postgres connection
+    db:
+      host: "db.{{ .Values.env }}.{{ .Values.plant }}.{{ .Values.domain }}"
+      port: 5432
+      database: "{{ .Values.product }}_{{ .Values.env }}_{{ .Values.plant }}_ca"
+      username: "{{ .Values.product }}_{{ .Values.env }}_{{ .Values.plant }}_ca"
+      password: "{{ .Values.product }}_{{ .Values.env }}_{{ .Values.plant }}_ca"
+
+  # Kubernetes settings
+  k8s:
+    replicas: 1
+    budget:
+      minAvailable: 0
+    hpa:
+      enabled: false
+      maxReplicas: 4
+      targetCPUUtilizationPercentage: 75
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 650Mi
+      requests:
+        cpu: 20m
+        memory: 380Mi
+    service:
+      annotations:
+        prometheus.io/scrape: "false"
+    pod:
+      annotations: {}
+    ingress:
+      class: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      tls: {}
+      hosts: []

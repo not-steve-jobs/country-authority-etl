@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.countryAuthorityEtl.k8s.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum | quote }}
+        version: {{ .Chart.Version | quote }}
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: {{ .Chart.Name }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.dockerRegistry }}/{{ tpl .Values.countryAuthorityEtl.image $ }}{{ if .Values.digest }}@{{ .Values.digest }}{{ else }}:{{ .Chart.Version }}{{ end }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+          readOnlyRootFilesystem: false
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: config
+          mountPath: /app/config/default.yaml
+          subPath: default.yaml
+        startupProbe:
+          httpGet:
+            path: /status
+            port: 3000
+            scheme: HTTP
+          periodSeconds: 5
+          failureThreshold: 12
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 3000
+            scheme: HTTP
+          periodSeconds: 20
+          failureThreshold: 3
+          successThreshold: 1
+        resources:
+{{ toYaml .Values.countryAuthorityEtl.k8s.resources | indent 10}}

@@ -1,0 +1,14 @@
+{
+  "root": true,
+  "parserOptions": {
+    "project": "tsconfig.eslint.json"
+  },
+  "extends": [
+    "@trading-config-pro/eslint-config"
+  ],
+  "rules": {
+    "indent": "off",
+    "jest/expect-expect": "off",
+    "@typescript-eslint/explicit-function-return-type": "error"
+  }
+}

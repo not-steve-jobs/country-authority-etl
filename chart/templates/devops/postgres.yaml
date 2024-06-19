@@ -1,0 +1,14 @@
+{{- if .Values.devops | default false }}
+{{- with .Values.countryAuthorityEtl.config.db }}
+db_host: {{ tpl .host $ | quote }}
+db_username: {{ tpl .username $ | quote }}
+db_name: {{ tpl .database $ | quote }}
+db_password: {{ tpl .password $ | quote }}
+{{- end }}
+{{ if .Values.psqlAdmin }}
+{{- with .Values.psqlAdmin }}
+db_root_password: {{ .password | quote }}
+db_root_username: {{ .username | quote }}
+{{- end }}
+{{ end }}
+{{- end }}

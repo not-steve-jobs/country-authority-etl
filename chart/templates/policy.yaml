@@ -1,0 +1,14 @@
+---
+{{ if gt .Values.countryAuthorityEtl.k8s.budget.minAvailable 0.0 }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  minAvailable: {{ .Values.countryAuthorityEtl.k8s.budget.minAvailable }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+{{ end }}

@@ -1,0 +1,26 @@
+{
+  "jsc": {
+    "baseUrl": ".",
+    "paths": {
+      "@config": ["./src/config"],
+      "@config/*": ["./src/config/*"],
+      "@core": ["./src/core"],
+      "@core/*": ["./src/core/*"],
+      "@modules/": ["./@modules"],
+      "@modules/*": ["./@modules/*"]
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": true
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
+    "target": "es2019"
+  },
+  "module": {
+    "type": "commonjs"
+  }
+}
